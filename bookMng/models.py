@@ -22,4 +22,20 @@ class Book(models.Model):
     username = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.name)
+
+
+
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    name = models.CharField(max_length=80)
+    email = models.CharField(max_length=80)
+    body = models.TextField()
+    posted_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['posted_date']
+
+    
+    def __str__(self):
+        return 'Review {} by {}'.format(self.body, self.name)

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    Post Book
+    Post Review
 {% endblock title%}
 
 
@@ -17,12 +17,21 @@
 {% endblock sidenav %}
 
 {% block content %}
-<h1> Post Book </h1>
 {% if submitted %}
+    <h1> Reviews for {{book.name}}</h1>
     <p align="center">
-        Post Successfully!
+        {% for review in reviews %}
+        <div class="review">
+        <p>{{ review.name }}</p>
+        <p>{{ review.email }}</p>
+        <p>{{ review.body }}</p>
+
+        </div>
+        <hr>
+        {% endfor %}
     </p>
 {% else %}
+<h1> Post Review  for {{book.name}}</h1>
     <form action="" enctype="multipart/form-data" method="post" novalidate>
         <table>
             {{ form.as_table }}

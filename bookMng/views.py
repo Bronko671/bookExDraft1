@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 
 from django.http import HttpResponseRedirect
 
 from .models import MainMenu, Book
 
-from .forms import BookForm
+from .forms import BookForm, ReviewForm
 
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
@@ -29,6 +29,33 @@ def index(request):
             }
             )
 
+
+@login_required(login_url=reverse_lazy('login'))
+def postreview(request, book_id):
+    submitted = False
+    book = get_object_or_404(Book, pk=book_id)
+    reviews = book.review_set.all()
+    if request.method == 'POST':
+        form = ReviewForm(data=request.POST)
+
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.book = book
+            review.save()
+            return HttpResponseRedirect('/displaybooks/book_detail/{}/postreview?submitted=True'.format(book_id))
+    else:
+        form = ReviewForm()
+        if 'submitted' in request.GET:
+            submitted = True
+    
+    return render(request, 'bookMng/postreview.html',
+            {
+                'book': book,
+                'form': form,
+                'item_list': MainMenu.objects.all(),
+                'submitted': submitted,
+                'reviews': reviews,
+            })
 
 @login_required(login_url=reverse_lazy('login'))
 def postbook(request):
@@ -74,11 +101,14 @@ def displaybooks(request):
 @login_required(login_url=reverse_lazy('login'))
 def book_detail(request, book_id):
     book = Book.objects.get(id=book_id)
+
+    picture = str(book.picture)[6:]
     return render(request,
             'bookMng/book_detail.html',
             {
                 'item_list': MainMenu.objects.all(),
-                'book': book
+                'book': book,
+                'picture': picture,
             }
             )
 

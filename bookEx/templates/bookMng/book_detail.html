@@ -29,9 +29,18 @@
                {{ book.username }}
            </td>
            <td>
-                <img src="{% static book.pic_path %}">
-               {{ book.pic_path }}
+            <img src="{{ picture }}" width="50" height="50">
            </td>
        </tr>
 </table>
+
+
+<h1>The reviews from the book go here</h1>
+{% comment %} <a href="book_detail/{{ book.id }}"> {% endcomment %}
+<a href="{{book.id}}/postreview">Post Review</a>
+<a href="{{book.id}}/postreview?submitted=True">See Reviews</a>
 {% endblock content %}
+
+
+
+
