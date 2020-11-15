@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 
 from django.http import HttpResponseRedirect
 
-from .models import MainMenu, Book
+from .models import MainMenu, Book, Order, OrderItem, ShippingAddress
 
 from .forms import BookForm, ReviewForm
 
@@ -11,6 +11,8 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth.models import User
 
 
 
@@ -90,17 +92,19 @@ def displaybooks(request):
     books = Book.objects.all()
     for b in books:
         b.pic_path = b.picture.url[14:]
+        b.picture = str(b.picture)[6:]
     return render(request,
             'bookMng/displaybooks.html',
             {
                 'item_list': MainMenu.objects.all(),
-                'books': books
+                'books': books,
             })
 
 
 @login_required(login_url=reverse_lazy('login'))
 def book_detail(request, book_id):
     book = Book.objects.get(id=book_id)
+    reviews = book.review_set.all()
 
     picture = str(book.picture)[6:]
     return render(request,
@@ -109,10 +113,71 @@ def book_detail(request, book_id):
                 'item_list': MainMenu.objects.all(),
                 'book': book,
                 'picture': picture,
+                'reviews': reviews,
             }
             )
 
 
+
+def additemtocart(request, book_id):
+
+    book = Book.objects.get(id=book_id)
+
+    print(book.name)
+
+    
+
+    # get already existing order if there is not one complete for current user
+
+    user = request.user
+
+    trying = Order.objects.all()
+
+    print(trying)
+
+    orders = Order.objects.filter(customer = user)
+
+    for order in orders:
+        if order.complete == False:
+
+            print('found one that is not complete yet')
+    # lol = get_object_or_404(Order, customer = user)
+
+    print(trying)
+
+
+    # add book to order
+
+    return HttpResponseRedirect("/cart")
+
+
+def cart(request):
+
+    
+    return render(request, 'cart/cart.html', 
+            {
+                'item_list': MainMenu.objects.all(),
+            }
+            )
+
+def checkout(request):
+    return render(request, 'cart/checkout.html',
+            {
+                'item_list': MainMenu.objects.all(),
+            }
+            )
+
+
+def searchbar(request):
+     if request.method == 'GET':
+         search = request.GET.get('search')
+         book = Book.objects.get(name=search)
+         return render(request,
+                       'bookMng/book_detail.html',
+                       {
+                           'item_list': MainMenu.objects.all(),
+                           'book': book
+                       })
 
 
 

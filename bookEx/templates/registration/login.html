@@ -7,11 +7,18 @@
 {% endblock title%}
 
 
-{% block sidenav %}
-<li>
-    <a href="/"> Home </a>
-</li>
-{% endblock sidenav %}
+    {% block sidenav %}
+    
+    {%for item in item_list %}
+    <ul class="navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="{{item.link}}">{{item.item}}</a>
+        </li>
+    </ul>
+
+    {% endfor %}
+
+    {% endblock sidenav %}
 
 {% block content %}
 <h1> User Login </h1>

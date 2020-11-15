@@ -6,32 +6,55 @@
 {% endblock title%}
 
 
-{% block sidenav %}
-  {% for item in item_list %}
-   <li>
-       <a href="{{ item.link }}"> {{ item.item }} </a>
-   </li>
-   {% endfor %}
-{% endblock sidenav %}
+    {% block sidenav %}
+    
+    {%for item in item_list %}
+    <ul class="navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="{{item.link}}">{{item.item}}</a>
+        </li>
+    </ul>
+
+    {% endfor %}
+
+    {% endblock sidenav %}
 
 
 {% block content %}
-<h1 align="center"> Display Book Page</h1>
-<table align="center" border="2" width="500">
-    {% for book in books %}
-       <tr>
-           <td>
-               <a href="book_detail/{{ book.id }}">
-                   {{book.name}}
-               </a>
-           </td>
-           <td>
-               {{ book.publishdate }}
-           </td>
-           <td>
-               {{ book.username }}
-           </td>
-       </tr>
-    {% endfor %}
-</table>
+
+    <br>
+
+    <div class="row">
+        {% for book in books %}
+
+            <div class="col-md-4">
+
+                <div class="box-content shadow">
+
+                    <img src="{{ book.picture }}" alt="book image" width="150" height="150" >
+                    <h5>{{ book.name }}</h5>
+                    {% comment %} <div class="text-center"> {% endcomment %}
+                        {% comment %} <a href="book_detail/{{ book.id }}">{{book.name}}</a> {% endcomment %}
+                    {% comment %} </div> {% endcomment %}
+                    <div class="line-through"> 
+                    <hr>
+                    </div>
+
+                    <a href="#" class="btn btn-btn btn-dark">Add To Cart</a>
+                    <a href="book_detail/{{ book.id }}" class="btn btn-btn btn-dark">View</a>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+    </div>
+
+    <!-- Added a simple search -->
+ <form action="{% url 'searchbar' %}" method="get">
+     <input type="text" name="search"/>
+     <button type="submit">Search</button>
+ </form>
+ <!-- end of search form -->
+  
 {% endblock content %}
