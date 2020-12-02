@@ -19,16 +19,6 @@
 {% block content %}
 
 
-
-	<div class="row">
-         <div class="searchbar">
-        <!-- Added a simple search -->
-        <form action="{% url 'searchbar' %}" method="get">
-            <input type="text" name="search"/>
-            <button type="submit">Search</button>
-        </form>
- <!-- end of search form -->
-    </div>
 		{% for product in books %}
 		<div class="col-lg-4">
 			{% comment %} <img class="thumbnail" src="{{product.imageURL}}"> {% endcomment %}
