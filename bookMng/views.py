@@ -11,12 +11,31 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-
+from django.core.mail import send_mail
 
 
 
 
 # Create your views here.
+
+@login_required(login_url=reverse_lazy('login'))
+def contact(request):
+    if request.method == 'POST':
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        # subject = request.POST['subject']
+        fromemail = request.POST['fromemail']
+        message = request.POST['message']
+        send_mail('message from ' + firstname + ' ' + lastname,
+                  message,
+                  fromemail,
+                  [settings.EMAIL_HOST_USER],
+                  fail_silently=False)
+        return render(request, 'bookMng/contact.html', {'firstname': firstname})
+
+    else:
+        return render(request, 'bookMng/contact.html', {})
+
 
 @login_required(login_url=reverse_lazy('login'))
 def index(request):
